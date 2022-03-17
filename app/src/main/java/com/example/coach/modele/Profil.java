@@ -17,6 +17,13 @@ public class Profil {
 
     private String message;
 
+    /**
+     * Constrcuteur de la classe Profil.
+     * @param poids
+     * @param taille en cm
+     * @param age
+     * @param sexe 0 : femme, 1 : homme
+     */
     public Profil(Integer poids, Integer taille, Integer age, Integer sexe) {
         this.poids = poids;
         this.taille = taille;
@@ -27,35 +34,68 @@ public class Profil {
         resultImg();
     }
 
+    /**
+     * Getter de poids.
+     * @return le poids.
+     */
     public Integer getPoids() {
         return poids;
     }
 
+    /**
+     * Getter de taille.
+     * @return la taille en cm.
+     */
     public Integer getTaille() {
         return taille;
     }
 
+    /**
+     * Getter de age.
+     * @return l'âge.
+     */
     public Integer getAge() {
         return age;
     }
 
+    /**
+     * Getter de sexe.
+     * @return le sexe, 0 : femme, 1 : homme.
+     */
     public Integer getSexe() {
         return sexe;
     }
 
+    /**
+     * Getter de img.
+     * @return l'IMG d'une personne.
+     */
     public float getImg() {
         return img;
     }
 
+    /**
+     * Getter de message.
+     * @return le message correspondant en fonction de l'IMG d'une personne.
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Permet le calcule de l'IMG, enregistre l'IMG calculé dans la donnée membre img;
+     * (1.2*poids/(taille_cm*taille_cm)) + (0.23*age) - (10.83*sexe) - 5.4
+     * sexe = 0 si femme, sexe = 1 si homme.
+     */
     private void calculImg() {
         float taille_cm = ((float)taille)/100;
         img = (float)((1.2*poids/(taille_cm*taille_cm)) + (0.23*age) - (10.83*sexe) - 5.4);
     }
 
+    /**
+     * Stocke dans la donnee membre message le message à afficher en fonction de l'IMG :
+     * "trop faible, normal ou trop élevé.
+     */
     private void resultImg() {
         if(sexe==0) { //femme
             if(img < minFemme) {
