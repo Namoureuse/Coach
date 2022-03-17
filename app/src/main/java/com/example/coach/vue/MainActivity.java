@@ -2,6 +2,8 @@ package com.example.coach.vue;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtTaille;
     private EditText txtAge;
     private RadioButton rdHomme;
+    private RadioButton rdFemme;
     private TextView lblIMG;
     private ImageView imgSmiley;
     private Button btnCalc;
@@ -37,20 +40,72 @@ public class MainActivity extends AppCompatActivity {
         txtTaille = (EditText) findViewById(R.id.txtTaille);
         txtAge = (EditText) findViewById(R.id.txtAge);
         rdHomme = (RadioButton) findViewById(R.id.rdHomme);
+        rdFemme = (RadioButton) findViewById(R.id.rdFemme);
         lblIMG = (TextView) findViewById(R.id.lblIMG);
         imgSmiley = (ImageView) findViewById(R.id.imgSmiley);
         btnCalc = (Button) findViewById(R.id.btnCalc);
 
-        controle = controle.getInstance();
+        controle = controle.getInstance(this);
 
         ecouteCalcul();
+
+        recupProfil();
     }
 
     private void ecouteCalcul() {
         btnCalc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "test", Toast.LENGTH_SHORT).show();
+                Integer poids = 0, taille = 0, age = 0;
+                try { // vérifie que ce qu'on a saisi c'est bien des entiers, même si Android Studio le gère automatiquement
+                    poids = Integer.parseInt(txtPoids.getText().toString());
+                    taille = Integer.parseInt(txtTaille.getText().toString());
+                    age = Integer.parseInt(txtAge.getText().toString());
+                } catch (Exception e) {}
+
+                Integer sexe = 0;
+                if(rdHomme.isChecked()) {
+                    sexe = 1;
+                }
+
+                if(poids==0 || taille==0 || age==0) {
+                    //Toast permet d'afficher un message temporaire sur l95'écran
+                    Toast.makeText(MainActivity.this, "Veuillez compléter tous les champs", Toast.LENGTH_SHORT).show();
+                } else {
+                    afficheResult(poids, taille, age, sexe);
+                }
             }
         });
+    }
+
+    private void afficheResult(Integer poids, Integer taille, Integer age, Integer sexe) {
+        controle.creerProfil(poids, taille, age, sexe, this);
+        float img = controle.getImg();
+        String msg = controle.getMessage();
+
+        if(msg=="trop faible") {
+            imgSmiley.setImageResource(R.drawable.graisse);
+            lblIMG.setTextColor(Color.RED);
+        } else if(msg=="normal") {
+            imgSmiley.setImageResource(R.drawable.normal);
+            lblIMG.setTextColor(Color.GREEN);
+        } else {
+            imgSmiley.setImageResource(R.drawable.maigre);
+            lblIMG.setTextColor(Color.RED);
+        }
+        lblIMG.setText(String.format("%.01f",img)+" : IMG "+msg);
+    }
+
+    private void recupProfil() {
+        if(controle.getTaille()!=null) {
+            txtTaille.setText(""+controle.getTaille());
+            txtPoids.setText(controle.getPoids().toString());
+            txtAge.setText(controle.getAge().toString());
+            if(controle.getSexe()==1){
+                rdHomme.setChecked(true);
+            } else {
+                rdFemme.setChecked(true);
+            }
+        }
+        btnCalc.performClick();
     }
 }
