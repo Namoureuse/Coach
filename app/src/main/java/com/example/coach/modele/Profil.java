@@ -1,7 +1,13 @@
 package com.example.coach.modele;
 
+import com.example.coach.outils.MesOutils;
+
+import org.json.JSONArray;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Profil implements Serializable {
     //constantes
@@ -124,5 +130,16 @@ public class Profil implements Serializable {
                 message = "trop élevé";
             }
         }
+    }
+
+    public JSONArray convertToJSONArray() {
+        List liste = new ArrayList();
+        liste.add(MesOutils.convertDateToString(dateMesure));
+        liste.add(poids);
+        liste.add(taille);
+        liste.add(age);
+        liste.add(sexe);
+
+        return new JSONArray(liste);
     }
 }
