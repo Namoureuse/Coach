@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         ecouteCalcul();
 
-        recupProfil();
+        //recupProfil(); enlevé en *3*, on va le faire plus loin
     }
 
     private void ecouteCalcul() {
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void afficheResult(Integer poids, Integer taille, Integer age, Integer sexe) {
-        controle.creerProfil(poids, taille, age, sexe, this);
+        controle.creerProfil(poids, taille, age, sexe);
         float img = controle.getImg();
         String msg = controle.getMessage();
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         lblIMG.setText(String.format("%.01f",img)+" : IMG "+msg);
     }
 
-    private void recupProfil() {
+    public void recupProfil() { //passé en public en *3*
         if(controle.getTaille()!=null) {
             txtTaille.setText(""+controle.getTaille());
             txtPoids.setText(controle.getPoids().toString());

@@ -2,19 +2,26 @@ package com.example.coach.modele;
 
 import android.util.Log;
 
+import com.example.coach.controleur.Controle;
 import com.example.coach.outils.AccesHTTP;
 import com.example.coach.outils.AsyncResponse;
+import com.example.coach.outils.MesOutils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
 
 public class AccesDistant implements AsyncResponse {
     private static final String SERVERADD = "http://192.168.1.66/coach/serveurcoach.php"; //constante de classe
+    private Controle controle;
 
     /**
      * Constructeur par défaut de la classe AccesDistant.
      */
     public AccesDistant() {
-        super();
+        controle = Controle.getInstance(null);
     }
 
     /**
@@ -31,7 +38,19 @@ public class AccesDistant implements AsyncResponse {
             if(message[0].equals("enreg")) {
                 Log.d("enreg", "*********** "+message[1]);
             } else if(message[0].equals("dernier")) {
-                Log.d("dernier", "*********** "+message[1]);
+                try {
+                    JSONObject info = new JSONObject(message[1]);
+                    Date dateMesure = MesOutils.convertStringToDate(info.getString("datemesure"),
+                            "yyyy-MM-dd hh:mm:ss");
+                    Integer poids = info.getInt("poids");
+                    Integer taille = info.getInt("taille");
+                    Integer age = info.getInt("age");
+                    Integer sexe = info.getInt("sexe");
+                    Profil profil = new Profil(poids, taille, age, sexe, dateMesure);
+                    controle.setProfil(profil);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             } else if(message[0].equals("Erreur !")) {
                 Log.d("erreur", "*********** "+message[1]);
             }

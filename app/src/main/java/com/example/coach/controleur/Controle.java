@@ -7,6 +7,7 @@ import com.example.coach.modele.AccesDistant;
 import com.example.coach.modele.AccesLocal;
 import com.example.coach.modele.Profil;
 import com.example.coach.outils.Serializer;
+import com.example.coach.vue.MainActivity;
 
 import org.json.JSONArray;
 
@@ -20,6 +21,7 @@ public final class Controle {
     private static String nomFic="saveProfil";
     //private static AccesLocal accesLocal; //*2*
     private static AccesDistant accesDistant;
+    private static Context context;
 
     /**
      * Constructeur par défaut de la classe Controle.
@@ -37,6 +39,9 @@ public final class Controle {
         if(Controle.instance == null) {
             Controle.instance = new Controle();
             //accesLocal = new AccesLocal(context);
+            if(context != null) { // *3*
+                Controle.context = context;
+            }
             accesDistant = new AccesDistant();
             accesDistant.envoi("dernier", new JSONArray());
             Log.d("profil1", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -53,7 +58,7 @@ public final class Controle {
      * @param age
      * @param sexe 0 : femme, 1 : homme
      */
-    public void creerProfil(Integer poids, Integer taille, Integer age, Integer sexe, Context context) {
+    public void creerProfil(Integer poids, Integer taille, Integer age, Integer sexe) {
         profil = new Profil(poids, taille, age, sexe, new Date());
         accesDistant.envoi("enreg", profil.convertToJSONArray()); /*3*/
         //accesLocal.ajout(profil); //*2*
@@ -99,4 +104,9 @@ public final class Controle {
     /*private static void recupSerialize(Context context) {
         profil = (Profil) Serializer.deSerialize(nomFic, context);
     }*/
+
+    public void setProfil(Profil profil) {
+        Controle.profil = profil;
+        ((MainActivity)context).recupProfil();
+    }
 }
