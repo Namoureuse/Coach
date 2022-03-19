@@ -4,10 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.coach.modele.AccesDistant;
-import com.example.coach.modele.AccesLocal;
 import com.example.coach.modele.Profil;
-import com.example.coach.outils.Serializer;
-import com.example.coach.vue.MainActivity;
+import com.example.coach.vue.CalculActivity;
 
 import org.json.JSONArray;
 
@@ -107,6 +105,6 @@ public final class Controle {
 
     public void setProfil(Profil profil) {
         Controle.profil = profil;
-        ((MainActivity)context).recupProfil();
+        ((CalculActivity)context).recupProfil();
     }
 }
