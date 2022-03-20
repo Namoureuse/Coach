@@ -39,4 +39,13 @@ public abstract class MesOutils {
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return date.format(uneDate);
     }
+
+    /**
+     * Convertit un float passé en paramètre en String, en l'arrondissant à 2 décimales.
+     * @param chiffre
+     * @return
+     */
+    public static String format2Decimal(Float chiffre) {
+        return String.format("%.01f", chiffre);
+    }
 }

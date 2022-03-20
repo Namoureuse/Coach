@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Profil implements Serializable {
+public class Profil implements Comparable {
     //constantes
     //static => la propriété est à portée de classe, final => elle ne peut être modifiée
     private static final Integer minFemme = 15; //maigre si en dessous
@@ -141,5 +141,10 @@ public class Profil implements Serializable {
         liste.add(sexe);
 
         return new JSONArray(liste);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return dateMesure.compareTo(((Profil)o).getDateMesure());
     }
 }

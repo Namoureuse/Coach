@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.coach.*;
 import com.example.coach.controleur.Controle;
+import com.example.coach.outils.MesOutils;
 
 public class CalculActivity extends AppCompatActivity {
     private EditText txtPoids;
@@ -48,7 +49,7 @@ public class CalculActivity extends AppCompatActivity {
 
         ecouteCalcul();
 
-        //recupProfil(); enlevé en *3*, on va le faire plus loin
+        recupProfil(); //enlevé en *3*, on va le faire plus loin
     }
 
     private void ecouteCalcul() {
@@ -91,7 +92,7 @@ public class CalculActivity extends AppCompatActivity {
             imgSmiley.setImageResource(R.drawable.maigre);
             lblIMG.setTextColor(Color.RED);
         }
-        lblIMG.setText(String.format("%.01f",img)+" : IMG "+msg);
+        lblIMG.setText(MesOutils.format2Decimal(img) +" : IMG " + msg);
     }
 
     public void recupProfil() { //passé en public en *3*
@@ -105,6 +106,7 @@ public class CalculActivity extends AppCompatActivity {
                 rdFemme.setChecked(true);
             }
         }
-        btnCalc.performClick();
+        //btnCalc.performClick();
+        controle.setProfil(null);
     }
 }

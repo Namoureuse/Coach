@@ -11,10 +11,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class AccesDistant implements AsyncResponse {
-    private static final String SERVERADD = "http://192.168.1.66/coach/serveurcoach.php"; //constante de classe
+    private static final String SERVERADD = "http://192.168.43.79/coach/serveurcoach.php"; //constante de classe
     private Controle controle;
 
     /**
@@ -37,17 +38,22 @@ public class AccesDistant implements AsyncResponse {
         if(message.length > 1) {
             if(message[0].equals("enreg")) {
                 Log.d("enreg", "*********** "+message[1]);
-            } else if(message[0].equals("dernier")) {
+            } else if(message[0].equals("tous")) {
                 try {
-                    JSONObject info = new JSONObject(message[1]);
-                    Date dateMesure = MesOutils.convertStringToDate(info.getString("datemesure"),
-                            "yyyy-MM-dd hh:mm:ss");
-                    Integer poids = info.getInt("poids");
-                    Integer taille = info.getInt("taille");
-                    Integer age = info.getInt("age");
-                    Integer sexe = info.getInt("sexe");
-                    Profil profil = new Profil(poids, taille, age, sexe, dateMesure);
-                    controle.setProfil(profil);
+                    JSONArray infos = new JSONArray(message[1]);
+                    ArrayList<Profil> lesProfils = new ArrayList<Profil>();
+                    for(int i = 0; i < infos.length(); i++) {
+                        JSONObject info = new JSONObject(infos.get(i).toString());
+                        Date dateMesure = MesOutils.convertStringToDate(info.getString("datemesure"),
+                                "yyyy-MM-dd hh:mm:ss");
+                        Integer poids = info.getInt("poids");
+                        Integer taille = info.getInt("taille");
+                        Integer age = info.getInt("age");
+                        Integer sexe = info.getInt("sexe");
+                        Profil profil = new Profil(poids, taille, age, sexe, dateMesure);
+                        lesProfils.add(profil);
+                    }
+                    controle.setLesProfils(lesProfils);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

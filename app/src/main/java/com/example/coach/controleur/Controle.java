@@ -9,6 +9,7 @@ import com.example.coach.vue.CalculActivity;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 //*1* : Serialisation   *2* : Acces BDD locale (au téléphone)   *3* : Acces BDD distante (phpmyadmin)
@@ -20,6 +21,7 @@ public final class Controle {
     //private static AccesLocal accesLocal; //*2*
     private static AccesDistant accesDistant;
     private static Context context;
+    private ArrayList<Profil> lesProfils;
 
     /**
      * Constructeur par défaut de la classe Controle.
@@ -41,7 +43,7 @@ public final class Controle {
                 Controle.context = context;
             }
             accesDistant = new AccesDistant();
-            accesDistant.envoi("dernier", new JSONArray());
+            accesDistant.envoi("tous", new JSONArray());
             Log.d("profil1", ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             //profil = accesLocal.recupDernier(); //*2*
            //recupSerialize(context); //*1*
@@ -57,8 +59,9 @@ public final class Controle {
      * @param sexe 0 : femme, 1 : homme
      */
     public void creerProfil(Integer poids, Integer taille, Integer age, Integer sexe) {
-        profil = new Profil(poids, taille, age, sexe, new Date());
-        accesDistant.envoi("enreg", profil.convertToJSONArray()); /*3*/
+        Profil unProfil = new Profil(poids, taille, age, sexe, new Date());
+        accesDistant.envoi("enreg", unProfil.convertToJSONArray()); /*3*/
+        lesProfils.add(unProfil);
         //accesLocal.ajout(profil); //*2*
         //Serializer.serialize(nomFic, profil, context); //*1*
     }
@@ -68,7 +71,11 @@ public final class Controle {
      * @return l'IMG calculé.
      */
     public float getImg() {
-        return profil.getImg();
+        if(lesProfils.isEmpty()) {
+            return 0;
+        } else{
+            return lesProfils.get(lesProfils.size() - 1).getImg();
+        }
     }
 
     /**
@@ -76,7 +83,11 @@ public final class Controle {
      * @return le message en fonction de l'IMG.
      */
     public String getMessage() {
-        return profil.getMessage();
+        if(lesProfils.isEmpty()) {
+            return "";
+        } else {
+            return profil.getMessage();
+        }
     }
 
     public Integer getPoids() {
@@ -99,12 +110,33 @@ public final class Controle {
         else return profil.getSexe();
     }
 
+    /**
+     * Getter du tableau lesProfils.
+     * @return un tableau de profils.
+     */
+    public ArrayList<Profil> getLesProfils() {
+        return lesProfils;
+    }
+
+    /**
+     * Setter du tableau lesProfils.
+     * @param lesProfils
+     */
+    public void setLesProfils(ArrayList<Profil> lesProfils) {
+        this.lesProfils = lesProfils;
+    }
+
     /*private static void recupSerialize(Context context) {
         profil = (Profil) Serializer.deSerialize(nomFic, context);
     }*/
 
     public void setProfil(Profil profil) {
         Controle.profil = profil;
-        ((CalculActivity)context).recupProfil();
+        //((CalculActivity)context).recupProfil();
+    }
+
+    public void delProfil(Profil profil) {
+        accesDistant.envoi("suppr", profil.convertToJSONArray());
+        lesProfils.remove(profil);
     }
 }
